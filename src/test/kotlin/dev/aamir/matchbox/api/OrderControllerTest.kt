@@ -1,8 +1,8 @@
 package dev.aamir.matchbox.api
 
+import dev.aamir.matchbox.PostgresTest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
@@ -10,7 +10,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import org.springframework.test.annotation.DirtiesContext
 import kotlin.test.Test
 
 /**
@@ -30,10 +29,8 @@ import kotlin.test.Test
  * nothing to do with what they are checking. Rebuilding the context is the
  * blunt fix, and on an application this size it costs about a second.
  */
-@SpringBootTest
 @AutoConfigureMockMvc
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class OrderControllerTest(@Autowired val mvc: MockMvc) {
+class OrderControllerTest(@Autowired val mvc: MockMvc) : PostgresTest() {
 
     private fun placeJson(side: String, price: Long, qty: Long) =
         """{"side":"$side","type":"LIMIT","price":$price,"quantity":$qty}"""

@@ -6,6 +6,7 @@ import dev.aamir.matchbox.engine.Order
 import dev.aamir.matchbox.engine.OrderType
 import dev.aamir.matchbox.engine.Side
 import dev.aamir.matchbox.engine.Trade
+import dev.aamir.matchbox.persistence.TradeRecord
 import jakarta.validation.constraints.Positive
 import jakarta.validation.constraints.PositiveOrZero
 
@@ -67,6 +68,16 @@ data class TradeResponse(
 ) {
     companion object {
         fun from(t: Trade) = TradeResponse(
+            buyOrderId = t.buyOrderId,
+            sellOrderId = t.sellOrderId,
+            price = t.price,
+            quantity = t.quantity,
+            notional = t.notional,
+            sequence = t.sequence,
+        )
+
+        /** Same shape whether the trade came from the engine or the log. */
+        fun from(t: TradeRecord) = TradeResponse(
             buyOrderId = t.buyOrderId,
             sellOrderId = t.sellOrderId,
             price = t.price,

@@ -1,6 +1,6 @@
 package dev.aamir.matchbox.api
 
-import dev.aamir.matchbox.engine.MatchingEngine
+import dev.aamir.matchbox.TradingService
 import dev.aamir.matchbox.engine.Order
 import dev.aamir.matchbox.engine.OrderType
 import jakarta.validation.Valid
@@ -18,7 +18,7 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("/api/v1")
-class OrderController(private val engine: MatchingEngine) {
+class OrderController(private val trading: TradingService) {
 
     /**
      * Submits an order. Matches immediately against the book; whatever is left
@@ -38,13 +38,13 @@ class OrderController(private val engine: MatchingEngine) {
             price = if (request.type == OrderType.MARKET) 0 else request.price,
             quantity = request.quantity,
         )
-        val result = engine.submit(order)
+        val result = trading.place(order)
         return ResponseEntity.status(HttpStatus.CREATED).body(PlaceOrderResponse.from(result))
     }
 
     @GetMapping("/orders/{id}")
     fun get(@PathVariable id: String): ResponseEntity<OrderResponse> =
-        engine.orderById(id)
+        trading.orderById(id)
             ?.let { ResponseEntity.ok(OrderResponse.from(it)) }
             ?: ResponseEntity.notFound().build()
 
@@ -58,17 +58,22 @@ class OrderController(private val engine: MatchingEngine) {
      */
     @DeleteMapping("/orders/{id}")
     fun cancel(@PathVariable id: String): ResponseEntity<Any> = when {
-        engine.cancel(id) -> ResponseEntity.noContent().build()
-        engine.orderById(id) == null -> ResponseEntity.notFound().build()
+        trading.cancel(id) -> ResponseEntity.noContent().build()
+        trading.orderById(id) == null -> ResponseEntity.notFound().build()
         else -> ResponseEntity.status(HttpStatus.CONFLICT)
             .body(ApiError("not cancellable", "order is already filled or cancelled"))
     }
 
     @GetMapping("/book")
     fun book(@RequestParam(defaultValue = "10") depth: Int): BookResponse =
-        BookResponse.from(engine.snapshot(depth.coerceIn(1, 100)))
+        BookResponse.from(trading.book(depth.coerceIn(1, 100)))
 
+    /** Read from the trade log, not the engine — the database is the record. */
     @GetMapping("/trades")
     fun trades(@RequestParam(defaultValue = "50") limit: Int): List<TradeResponse> =
-        engine.trades().takeLast(limit.coerceIn(1, 500)).map(TradeResponse::from)
+        trading.recentTrades(limit.coerceIn(1, 500)).map(TradeResponse::from)
+
+    @GetMapping("/orders/{id}/trades")
+    fun tradesForOrder(@PathVariable id: String): List<TradeResponse> =
+        trading.tradesForOrder(id).map(TradeResponse::from)
 }

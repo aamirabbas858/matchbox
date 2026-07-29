@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/matchbox}
+    username: ${DATABASE_USER:matchbox}
+    password: ${DATABASE_PASSWORD:matchbox}
+  jpa:
+    hibernate:
+      # Never let Hibernate change the schema. Flyway owns it, so the schema is
+      # a reviewed migration in version control rather than a side effect of
+      # whatever the entity classes happened to look like at startup.
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate.jdbc.time_zone: UTC
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+server:
+  error:
+    # Errors are shaped by ErrorHandling. Spring's defaults would otherwise
+    # attach exception messages and paths to responses.
+    include-message: never
+    include-stacktrace: never

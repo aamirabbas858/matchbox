@@ -140,6 +140,23 @@ class MatchingEngine {
         return true
     }
 
+    /**
+     * Clears the book, the order index and the trade list.
+     *
+     * Start-of-session behaviour rather than a test hook: a real book does not
+     * carry resting orders across a trading session, and day orders expire at
+     * the close. Tests use it for the same reason — a clean book — which is a
+     * happy coincidence rather than the justification.
+     */
+    @Synchronized
+    fun reset() {
+        bids.clear()
+        asks.clear()
+        byId.clear()
+        executed.clear()
+        sequence.set(0)
+    }
+
     @Synchronized
     fun orderById(orderId: String): Order? = byId[orderId]
 
