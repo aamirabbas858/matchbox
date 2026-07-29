@@ -70,10 +70,16 @@ tasks.test {
     //   /v1.32/info -> 400
     //   /v1.41/info -> 200
     //
-    // Pinning the API version is the fix. 1.45 sits well inside the daemon's
-    // supported 1.40-1.55 range and does not need bumping every Docker release.
-    environment("DOCKER_API_VERSION", "1.45")
-    // docker-java reads the negotiated version from this system property too;
-    // the environment variable alone is not honoured by every strategy.
-    systemProperty("api.version", "1.45")
+    // Pinning the API version is the fix. 1.43 rather than something newer
+    // because it has to be valid on both ends: Docker 29 accepts 1.40 upward,
+    // and older daemons on CI runners top out around 1.43. Picking the newest
+    // version this laptop supports would break the build on GitHub's runners,
+    // which is a worse failure than the one being fixed.
+    //
+    // Both forms are set: docker-java does not honour the environment variable
+    // in every client strategy, and the system property alone was not enough
+    // either.
+    val dockerApi = System.getenv("DOCKER_API_VERSION") ?: "1.43"
+    environment("DOCKER_API_VERSION", dockerApi)
+    systemProperty("api.version", dockerApi)
 }
