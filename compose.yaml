@@ -1,0 +1,47 @@
+# Everything needed to run matchbox on a machine that has only Docker.
+#
+#   docker compose up --build
+#
+# The application waits for Postgres to be genuinely accepting connections, not
+# merely started. Compose's default `depends_on` only waits for the container
+# to exist, which on a cold start means the application tries to migrate
+# against a database that is still initialising and exits.
+
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: matchbox
+      POSTGRES_USER: matchbox
+      POSTGRES_PASSWORD: matchbox
+    ports:
+      # Exposed so tests and psql can reach it from the host. In a real
+      # deployment this would not be published at all.
+      - "5432:5432"
+    volumes:
+      - matchbox-data:/var/lib/postgresql/data
+    healthcheck:
+      # pg_isready rather than a sleep. A fixed delay is either too short on a
+      # slow machine or wasted time on a fast one.
+      test: ["CMD-SHELL", "pg_isready -U matchbox -d matchbox"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  app:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # The container talks to the database over the compose network, where it
+      # is reachable by service name rather than on localhost.
+      DATABASE_URL: jdbc:postgresql://db:5432/matchbox
+      DATABASE_USER: matchbox
+      DATABASE_PASSWORD: matchbox
+      GRAPHIQL_ENABLED: "true"
+    ports:
+      - "8080:8080"
+
+volumes:
+  matchbox-data:

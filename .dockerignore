@@ -1,0 +1,11 @@
+# Build output and caches — the image builds its own.
+build/
+.gradle/
+# Never let credentials reach an image layer. Deleting a file in a later layer
+# does not remove it from the earlier one.
+.env
+*.env
+.git/
+.idea/
+*.iml
+.DS_Store

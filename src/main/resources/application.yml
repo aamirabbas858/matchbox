@@ -30,3 +30,17 @@ server:
     # attach exception messages and paths to responses.
     include-message: never
     include-stacktrace: never
+
+management:
+  endpoints:
+    web:
+      exposure:
+        # Only health. The default set includes env and configprops, which
+        # print environment variables and resolved configuration — that is a
+        # credential dump on an open port.
+        include: health
+  endpoint:
+    health:
+      # "UP" or "DOWN" and nothing else. Component detail tells an unauthenticated
+      # caller which database you run and whether it is reachable.
+      show-details: never
