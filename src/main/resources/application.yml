@@ -15,6 +15,14 @@ spring:
   flyway:
     enabled: true
     locations: classpath:db/migration
+  graphql:
+    schema:
+      locations: classpath:graphql/
+    graphiql:
+      # An interactive schema explorer at /graphiql. Genuinely useful while
+      # developing, and exactly the sort of thing that should not be reachable
+      # in production — so it is off unless switched on explicitly.
+      enabled: ${GRAPHIQL_ENABLED:false}
 
 server:
   error:

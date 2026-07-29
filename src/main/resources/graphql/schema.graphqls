@@ -1,0 +1,82 @@
+# Read-only, by design.
+#
+# Orders are placed over REST and nowhere else. A mutation here would be a
+# second way into the matching engine, and two entry points to the thing that
+# decides who gets filled is one more than an exchange should have.
+#
+# What GraphQL is genuinely better at is the read side: a client that wants the
+# book, the last few trades and one order's fills gets them in one round trip
+# and asks for exactly the fields it will use. Over REST that is three requests
+# and three fixed response shapes.
+
+type Query {
+    """Current order book depth, best prices first."""
+    book(depth: Int = 10): Book!
+
+    """Most recent trades, newest first."""
+    trades(limit: Int = 50): [Trade!]!
+
+    """A single order by id, or null if the engine has never seen it."""
+    order(id: ID!): Order
+
+    """Every trade an order took part in, on either side."""
+    tradesForOrder(id: ID!): [Trade!]!
+
+    """Total traded value in minor units, summed in SQL rather than in memory."""
+    totalNotional: Long!
+}
+
+"""
+Whole numbers of minor units — cents, not euros.
+
+Deliberately not Float. GraphQL's Float is an IEEE-754 double, and 0.1 + 0.2
+is 0.30000000000000004 in one. A price a fraction of a cent out is a trade
+that cannot be settled, so no price in this schema is ever a floating type.
+Int is 32-bit in GraphQL and would overflow at about 21 million euros of
+notional, which is not a limit an exchange should have.
+"""
+scalar Long
+
+type Book {
+    bids: [Level!]!
+    asks: [Level!]!
+    bestBid: Long
+    bestAsk: Long
+    """Best ask minus best bid. Null when either side is empty; never negative."""
+    spread: Long
+}
+
+type Level {
+    price: Long!
+    """Total remaining quantity resting at this price."""
+    quantity: Long!
+    """How many separate orders make up that quantity."""
+    orders: Int!
+}
+
+type Order {
+    id: ID!
+    side: Side!
+    type: OrderType!
+    price: Long!
+    quantity: Long!
+    filled: Long!
+    remaining: Long!
+    status: OrderStatus!
+}
+
+type Trade {
+    buyOrderId: ID!
+    sellOrderId: ID!
+    """The resting order's price — price improvement goes to the incoming order."""
+    price: Long!
+    quantity: Long!
+    """price x quantity, computed server-side so no client multiplies money."""
+    notional: Long!
+    """The engine's arrival ordering. Unique, and what makes replay deterministic."""
+    sequence: Long!
+}
+
+enum Side { BUY SELL }
+enum OrderType { LIMIT MARKET }
+enum OrderStatus { OPEN PARTIALLY_FILLED FILLED CANCELLED REJECTED }
