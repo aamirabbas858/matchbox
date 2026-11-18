@@ -14,7 +14,7 @@ import jakarta.validation.constraints.PositiveOrZero
  * What crosses the wire.
  *
  * Kept separate from the engine's own types on purpose. The domain is free to
- * change shape without breaking every client, and — more importantly here —
+ * change shape without breaking every client, and - more importantly here -
  * the API cannot accidentally expose an internal field by adding one. Engine
  * types are not annotated with anything web-related and never will be.
  *

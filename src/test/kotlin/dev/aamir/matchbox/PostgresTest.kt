@@ -16,7 +16,7 @@ import org.testcontainers.containers.PostgreSQLContainer
  * things production rejects. The CHECK constraints in V1 are exactly that.
  *
  * State is reset rather than rebuilt. @DirtiesContext would give each test a
- * fresh engine, but it tears down and recreates the whole context — which
+ * fresh engine, but it tears down and recreates the whole context - which
  * re-runs Flyway and re-binds the container's connection details every time,
  * and that rebinding is fragile. Truncating one table and clearing the book is
  * both faster and less to go wrong.
@@ -31,7 +31,7 @@ abstract class PostgresTest {
 
     @BeforeEach
     fun clean() {
-        // The engine is a singleton bean, deliberately — two engines would
+        // The engine is a singleton bean, deliberately - two engines would
         // each be internally consistent and collectively wrong. That makes the
         // order book shared state across tests, so it has to be cleared.
         engine.reset()

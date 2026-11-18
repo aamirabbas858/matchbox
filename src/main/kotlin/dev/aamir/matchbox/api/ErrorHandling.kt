@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 /**
  * Turns failures into answers a client can act on.
  *
- * Without this, Spring returns its own error shape — which includes the
+ * Without this, Spring returns its own error shape - which includes the
  * exception's message, and sometimes a stack trace. An engine assertion like
  * "overfill: 12 > 10 on o37" tells an attacker about internal state and tells
  * a legitimate client nothing useful. Every case below is mapped deliberately,
@@ -29,7 +29,7 @@ class ErrorHandling {
     }
 
     /**
-     * The engine's own `require` checks land here — a limit order priced at
+     * The engine's own `require` checks land here - a limit order priced at
      * zero, a quantity of zero. These are the caller's mistake, so 400 rather
      * than 500, and the message is the engine's because it is written to be
      * read by a person.

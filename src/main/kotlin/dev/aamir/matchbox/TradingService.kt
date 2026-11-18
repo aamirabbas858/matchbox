@@ -12,8 +12,8 @@ import org.springframework.transaction.annotation.Transactional
  * Matching, then recording.
  *
  * This layer exists so the engine does not have to know that a database
- * exists. [MatchingEngine] is a pure in-memory data structure — no I/O, no
- * Spring, no annotations — which is what makes its 17 tests fast and its
+ * exists. [MatchingEngine] is a pure in-memory data structure - no I/O, no
+ * Spring, no annotations - which is what makes its 17 tests fast and its
  * behaviour reproducible. Persistence is a concern of the layer above, and
  * this is that layer.
  *
@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional
  * deliberate but it is a trade-off worth stating plainly: if the insert fails
  * after a match succeeds, the book has moved and the trade is not on disk.
  *
- * The alternative — holding a database transaction open across matching —
+ * The alternative - holding a database transaction open across matching -
  * would serialise every order behind a round trip to Postgres and make
  * throughput a function of database latency, which for a matching engine is
  * the wrong thing to be slow at. Real exchanges resolve this with a durable

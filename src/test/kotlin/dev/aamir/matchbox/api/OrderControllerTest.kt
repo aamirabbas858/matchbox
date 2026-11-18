@@ -22,7 +22,7 @@ import kotlin.test.Test
  *
  * Each test gets a fresh context, and therefore a fresh book.
  *
- * The engine is a singleton bean — deliberately, since two engines would each
+ * The engine is a singleton bean - deliberately, since two engines would each
  * be internally consistent and collectively wrong. That makes the order book
  * shared mutable state across tests: a bid left resting by one test crosses
  * the sell another test expected to rest, and both fail for reasons that have

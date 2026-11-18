@@ -21,7 +21,7 @@ import java.util.Locale
  * The read side.
  *
  * Everything here is a query and nothing is a mutation. Orders are placed over
- * REST and only over REST — a second entry point to the matching engine is one
+ * REST and only over REST - a second entry point to the matching engine is one
  * more than an exchange should have, and it would need its own idempotency and
  * its own validation to be equally safe.
  *
@@ -62,7 +62,7 @@ class BookGraphQl(private val trading: TradingService) {
  * expressed in cents, and Float cannot represent 0.1 exactly, which is the
  * whole reason prices are minor units in the first place.
  *
- * Serialised as a JSON number, but parsed from a string too — JavaScript
+ * Serialised as a JSON number, but parsed from a string too - JavaScript
  * clients lose precision above 2^53 and send large values as strings to avoid
  * it.
  */

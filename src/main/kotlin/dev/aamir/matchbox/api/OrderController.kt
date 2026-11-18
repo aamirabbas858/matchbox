@@ -26,7 +26,7 @@ class OrderController(private val trading: TradingService) {
      *
      * The id is generated here rather than accepted from the client. A client
      * that picks its own id can collide with another client's, and the engine
-     * rejects duplicates — so accepting them would turn one caller's mistake
+     * rejects duplicates - so accepting them would turn one caller's mistake
      * into another caller's failure.
      */
     @PostMapping("/orders")
@@ -52,7 +52,7 @@ class OrderController(private val trading: TradingService) {
      * Cancels an order's remaining quantity.
      *
      * 409 rather than 404 when the order exists but has nothing left to
-     * cancel — already filled, already cancelled. The distinction matters to a
+     * cancel - already filled, already cancelled. The distinction matters to a
      * client deciding whether to retry: "never existed" is a bug on their side,
      * "too late" is a race they lost.
      */
@@ -68,7 +68,7 @@ class OrderController(private val trading: TradingService) {
     fun book(@RequestParam(defaultValue = "10") depth: Int): BookResponse =
         BookResponse.from(trading.book(depth.coerceIn(1, 100)))
 
-    /** Read from the trade log, not the engine — the database is the record. */
+    /** Read from the trade log, not the engine - the database is the record. */
     @GetMapping("/trades")
     fun trades(@RequestParam(defaultValue = "50") limit: Int): List<TradeResponse> =
         trading.recentTrades(limit.coerceIn(1, 500)).map(TradeResponse::from)

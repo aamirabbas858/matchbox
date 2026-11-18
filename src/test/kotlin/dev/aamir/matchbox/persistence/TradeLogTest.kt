@@ -15,7 +15,7 @@ import kotlin.test.assertTrue
  *
  * Testcontainers rather than H2. An in-memory database has different SQL,
  * different type coercion and different constraint behaviour, so it accepts
- * things production rejects — and the failures then arrive in production,
+ * things production rejects - and the failures then arrive in production,
  * which is the one place they are expensive. The CHECK constraints in V1 are
  * exactly the kind of thing H2 would handle differently.
  *
@@ -95,7 +95,7 @@ class TradeLogTest(
 
     @Test
     fun `the database refuses a trade between an order and itself`() {
-        // The engine can never produce this — a resting order cannot cross
+        // The engine can never produce this - a resting order cannot cross
         // itself. The constraint exists so a future code path cannot either.
         val selfTrade = TradeRecord(
             sequence = 999_999,

@@ -3,7 +3,7 @@ package dev.aamir.matchbox.engine
 /**
  * The vocabulary of an order book.
  *
- * Money is an integer count of minor units — cents, not euros. Never a Double.
+ * Money is an integer count of minor units - cents, not euros. Never a Double.
  * `0.1 + 0.2` is `0.30000000000000004` in binary floating point, and a price
  * that is a fraction of a cent out is a trade that cannot be settled. Every
  * price and total in this engine is a Long, and formatting for humans happens
@@ -31,7 +31,7 @@ enum class OrderStatus { OPEN, PARTIALLY_FILLED, FILLED, CANCELLED, REJECTED }
  * A resting or incoming order.
  *
  * [sequence] is assigned by the engine on arrival and is what time priority is
- * decided by — not a wall-clock timestamp. Two orders can share a millisecond;
+ * decided by - not a wall-clock timestamp. Two orders can share a millisecond;
  * they cannot share a sequence number. Using a clock here would make the
  * outcome depend on how fast the machine is, which is exactly the property an
  * exchange must not have.
@@ -67,7 +67,7 @@ data class Order(
 data class Trade(
     val buyOrderId: String,
     val sellOrderId: String,
-    /** The resting order's price — see [MatchingEngine] for why. */
+    /** The resting order's price - see [MatchingEngine] for why. */
     val price: Long,
     val quantity: Long,
     val sequence: Long,
@@ -86,7 +86,7 @@ data class BookSnapshot(val bids: List<Level>, val asks: List<Level>) {
 
     /**
      * The gap between the best bid and best ask. Null when either side is
-     * empty. Should never be negative — see the invariant test.
+     * empty. Should never be negative - see the invariant test.
      */
     val spread: Long? get() = bestBid?.let { b -> bestAsk?.let { a -> a - b } }
 }

@@ -35,7 +35,7 @@ class TradeRecord(
     @Column(name = "sell_order_id", nullable = false, length = 64)
     val sellOrderId: String,
 
-    /** Minor units. BIGINT in the schema — never a floating type. */
+    /** Minor units. BIGINT in the schema - never a floating type. */
     @Column(nullable = false)
     val price: Long,
 
@@ -77,7 +77,7 @@ interface TradeRepository : JpaRepository<TradeRecord, Long> {
     /**
      * Total traded volume in minor units.
      *
-     * Summed in SQL rather than by loading every row and adding in Kotlin —
+     * Summed in SQL rather than by loading every row and adding in Kotlin -
      * the second approach works fine until the table is large, and then stops
      * working suddenly rather than gradually.
      */

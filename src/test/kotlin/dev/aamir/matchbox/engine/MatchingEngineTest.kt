@@ -9,7 +9,7 @@ import kotlin.test.assertTrue
 /**
  * The rules an exchange exists to guarantee.
  *
- * Each test here is a property that either holds or reveals a real defect —
+ * Each test here is a property that either holds or reveals a real defect -
  * not a check that the code does what the code does. Price-time priority in
  * particular fails silently: a book that fills the wrong order still returns
  * plausible trades at plausible prices, and nobody notices until somebody who

@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicLong
  *
  * Two rules decide everything:
  *
- *   PRICE PRIORITY  the best price is filled first — the cheapest ask, the
+ *   PRICE PRIORITY  the best price is filled first - the cheapest ask, the
  *                   highest bid.
  *
  *   TIME PRIORITY   among orders at the same price, the one that arrived
@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicLong
  *
  * The second rule is the fairness guarantee an exchange exists to provide.
  * Break it and later traders are quietly advantaged over earlier ones, which
- * is invisible until somebody tests for it — so there is a test for it.
+ * is invisible until somebody tests for it - so there is a test for it.
  *
  * Both rules fall out of the data structure rather than being enforced by
  * code. A TreeMap keyed by price gives price ordering; an ArrayDeque at each
@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicLong
  * If a buyer bids 51 and the best ask is 50, the trade happens at 50. The
  * price improvement goes to the arriving order, and the resting order gets
  * exactly what it asked for and no less. This is the standard rule and it is
- * the one most first attempts get wrong — they execute at the incoming price,
+ * the one most first attempts get wrong - they execute at the incoming price,
  * which silently overcharges every taker.
  *
  * --- single-threaded on purpose ---
@@ -56,7 +56,7 @@ class MatchingEngine {
 
     /**
      * Submits an order and matches it against the opposite side as far as it
-     * will go. Anything left over rests in the book — unless it is a MARKET
+     * will go. Anything left over rests in the book - unless it is a MARKET
      * order, which never rests.
      */
     @Synchronized
@@ -104,7 +104,7 @@ class MatchingEngine {
         working = when {
             working.remaining == 0L -> working.copy(status = OrderStatus.FILLED)
             // A market order that could not be filled does not wait for a
-            // better book — there is no price at which it was willing to rest.
+            // better book - there is no price at which it was willing to rest.
             working.type == OrderType.MARKET -> working.copy(
                 status = if (working.filled > 0) OrderStatus.PARTIALLY_FILLED else OrderStatus.REJECTED
             )
@@ -145,7 +145,7 @@ class MatchingEngine {
      *
      * Start-of-session behaviour rather than a test hook: a real book does not
      * carry resting orders across a trading session, and day orders expire at
-     * the close. Tests use it for the same reason — a clean book — which is a
+     * the close. Tests use it for the same reason - a clean book - which is a
      * happy coincidence rather than the justification.
      */
     @Synchronized
@@ -178,7 +178,7 @@ class MatchingEngine {
     /**
      * Whether an incoming order is willing to trade at [restingPrice].
      *
-     * A market order crosses anything — that is what makes it a market order.
+     * A market order crosses anything - that is what makes it a market order.
      * A limit buy crosses an ask at or below its price; a limit sell crosses a
      * bid at or above its price.
      */

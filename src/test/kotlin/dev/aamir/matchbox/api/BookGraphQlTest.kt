@@ -14,7 +14,7 @@ import kotlin.test.assertTrue
 /**
  * The GraphQL read side.
  *
- * The point of these is not that the engine works — that is covered directly.
+ * The point of these is not that the engine works - that is covered directly.
  * It is that the schema says what the engine means: that money survives as a
  * 64-bit integer rather than being quietly coerced to a double, that a client
  * gets exactly the fields it asked for, and that there is no way in here to
@@ -27,7 +27,7 @@ class BookGraphQlTest(
 ) : PostgresTest() {
 
     // Two traps in one line of assertion. Long::class.java is Kotlin's
-    // primitive long.class, so javaObjectType is needed for java.lang.Long —
+    // primitive long.class, so javaObjectType is needed for java.lang.Long -
     // and the expected value must be a Long literal, because an Int literal
     // compares unequal to a Long that prints identically. Both surface as the
     // memorable "expected:<8> but was:<8>".
@@ -132,7 +132,7 @@ class BookGraphQlTest(
         repeat(20) { trading.place(limit(Side.BUY, 1000L + it, 1)) }
 
         // A client asking for 10,000 levels gets the cap, not a slow query.
-        // 20 levels exist and the cap is 100, so all 20 come back — the point
+        // 20 levels exist and the cap is 100, so all 20 come back - the point
         // is that the request was clamped rather than passed through.
         tester.document("{ book(depth: 10000) { bids { price } } }").execute()
             .path("book.bids").entityList(Any::class.java).hasSize(20)

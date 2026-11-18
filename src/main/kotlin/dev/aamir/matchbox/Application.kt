@@ -31,8 +31,8 @@ class Application {
      *
      * Hibernate Validator interpolates constraint messages through an EL
      * expression engine by default, which fails outright under Gradle's test
-     * worker classloader — "HV000149: An exception occurred during message
-     * interpolation" — turning every 400 into a 500 in tests while working
+     * worker classloader - "HV000149: An exception occurred during message
+     * interpolation" - turning every 400 into a 500 in tests while working
      * fine when run normally. A validation layer that behaves differently
      * under test than in production is worse than no validation layer.
      *

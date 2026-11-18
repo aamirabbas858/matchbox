@@ -15,8 +15,8 @@ than a restatement of the code.
 
 Everyone who wants to trade sends an **order**:
 
-- *"I'll buy 100 at up to 50.00"* — a **bid**
-- *"I'll sell 100 at 51.00 or more"* — an **ask**
+- *"I'll buy 100 at up to 50.00"* - a **bid**
+- *"I'll sell 100 at 51.00 or more"* - an **ask**
 
 They rest in a book, sorted. When a new order overlaps a resting one, they
 **match** and a trade happens.
@@ -33,9 +33,9 @@ They rest in a book, sorted. When a new order overlaps a resting one, they
 
 Two rules decide everything:
 
-**PRICE PRIORITY** — the best price fills first. Cheapest ask, highest bid.
+**PRICE PRIORITY** - the best price fills first. Cheapest ask, highest bid.
 
-**TIME PRIORITY** — among orders at the *same* price, the one that arrived
+**TIME PRIORITY** - among orders at the *same* price, the one that arrived
 first fills first.
 
 The second rule is the fairness guarantee an exchange exists to provide, and it
@@ -66,7 +66,7 @@ Bid 5200 into an ask of 5000 and the trade happens at **5000**. The price
 improvement goes to the incoming order; the resting order gets exactly what it
 asked for.
 
-This is the standard rule and the one first attempts most often get wrong —
+This is the standard rule and the one first attempts most often get wrong -
 executing at the incoming price silently overcharges every taker, and every
 number still looks reasonable.
 
@@ -80,7 +80,7 @@ machine is, which is the one property an exchange must not have.
 ### Money is never a floating-point number
 
 `0.1 + 0.2` is `0.30000000000000004`. Every price, quantity and total in this
-codebase is a `Long` count of minor units — cents, not euros — from the domain
+codebase is a `Long` count of minor units - cents, not euros - from the domain
 model through the JSON, the GraphQL schema and the `BIGINT` columns.
 
 The API does not accept decimals at all. `"50.50"` would have to be parsed into
@@ -99,7 +99,7 @@ tests fast and its behaviour reproducible.
 transaction: if the insert fails after a match succeeds, the book has moved and
 the trade is not on disk. Holding a transaction open across matching would make
 throughput a function of database latency, which for a matching engine is the
-wrong thing to be slow at. Real exchanges use a durable sequenced log — the
+wrong thing to be slow at. Real exchanges use a durable sequenced log - the
 correct answer, out of scope here, and worth naming rather than pretending
 away.
 
@@ -116,7 +116,7 @@ point to the thing that decides who gets filled, needing its own validation and
 idempotency to be equally safe. **A test asserts the schema rejects a
 mutation.**
 
-What GraphQL earns its place for is the read side — the book, recent trades and
+What GraphQL earns its place for is the read side - the book, recent trades and
 one order's fills in a single round trip, asking for exactly the fields used:
 
 ```graphql
@@ -147,7 +147,7 @@ Then:
 curl -X POST localhost:8080/api/v1/orders -H 'Content-Type: application/json' \
   -d '{"side":"SELL","type":"LIMIT","price":5000,"quantity":10}'
 
-# a buy willing to pay more — fills at 5000, not 5200
+# a buy willing to pay more - fills at 5000, not 5200
 curl -X POST localhost:8080/api/v1/orders -H 'Content-Type: application/json' \
   -d '{"side":"BUY","type":"LIMIT","price":5200,"quantity":10}'
 
@@ -198,7 +198,7 @@ lost.
 ```
 
 Real Postgres rather than H2. An in-memory stand-in has different SQL, type
-coercion and constraint behaviour, so it accepts things production rejects —
+coercion and constraint behaviour, so it accepts things production rejects -
 and those failures then arrive in production, which is where they are
 expensive.
 
@@ -214,7 +214,7 @@ Hibernate · Testcontainers · JUnit 5 · Gradle · Docker · GitHub Actions
   Real venues require a client order id for exactly this reason.
 - **No durable sequenced log**, so a crash between matching and insert loses a
   trade. See above.
-- **No self-trade prevention** between orders from the same participant —
+- **No self-trade prevention** between orders from the same participant -
   there are no participants yet.
 - **No order types beyond LIMIT and MARKET.** No stop, no iceberg, no
   time-in-force.
@@ -240,10 +240,10 @@ under test than in production is worse than none.
 entities reflectively.
 
 **`Long::class.java` is Kotlin's primitive `long.class`**, and an `Int` literal
-compares unequal to a `Long` that prints identically — `expected:<8> but
+compares unequal to a `Long` that prints identically - `expected:<8> but
 was:<8>`.
 
 ---
 
-Built by [Abbas Aamir](https://www.linkedin.com/in/abbas-aamir-474969353/) —
+Built by [Abbas Aamir](https://www.linkedin.com/in/abbas-aamir-474969353/) -
 CS undergraduate in Berlin.
